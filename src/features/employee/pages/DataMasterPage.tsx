@@ -5,6 +5,7 @@ import {
   IconCategory2,
   IconListDetails,
   IconArrowLeft,
+  IconUserSquare,
 } from "@tabler/icons-react";
 
 const masterMenus = [
@@ -27,6 +28,11 @@ const masterMenus = [
     title: "Data Barang",
     path: "/data_master/barang",
     icon: <IconBox size={32} className="text-indigo-600" />,
+  },
+  {
+    title: "Data Suplier",
+    path: "/data_master/suplier",
+    icon: <IconUserSquare size={32} className="text-indigo-600" />,
   },
 ];
 

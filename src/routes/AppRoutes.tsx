@@ -138,6 +138,23 @@ const { MenuDetailPage } = lazyImport(
   () => import("@/features/employee/pages/Menu"),
   "MenuDetailPage"
 );
+const { SuplierListPage } = lazyImport(
+  () => import("@/features/employee/pages/Suplier"),
+  "SuplierListPage"
+);
+const { SuplierAddPage } = lazyImport(
+  () => import("@/features/employee/pages/Suplier"),
+  "SuplierAddPage"
+);
+const { SuplierUpdatePage } = lazyImport(
+  () => import("@/features/employee/pages/Suplier"),
+  "SuplierUpdatePage"
+);
+const { SuplierDetailPage } = lazyImport(
+  () => import("@/features/employee/pages/Suplier"),
+  "SuplierDetailPage"
+);
+
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -191,6 +208,11 @@ export const AppRoutes: React.FC = () => {
             <Route path="menu/tambah" element={<MenuAddPage />} />
             <Route path="menu/edit/:id" element={<MenuUpdatePage />} />
             <Route path="menu/detail" element={<MenuDetailPage/>} />
+
+            <Route path="suplier" element={<SuplierListPage />} />
+            <Route path="suplier/tambah" element={<SuplierAddPage />} />
+            <Route path="suplier/edit/:id" element={<SuplierUpdatePage />} />
+            <Route path="suplier/detail" element={<SuplierDetailPage/>} />
           </Route>
         </Route>
       </Route>
