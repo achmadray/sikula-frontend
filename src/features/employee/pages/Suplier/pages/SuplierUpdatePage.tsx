@@ -16,11 +16,11 @@ export const SuplierUpdatePage = () => {
     },
     validate: {
       nama_suplier: (value) =>
-        value.length < 20 ? "Nama Suplier must have at least 20 letters" : null,
+        value.length < 5 ? "Nama Suplier must have at least 5 letters" : null,
       alamat: (value) =>
-        value.length < 50 ? "Level must have at least 50 letters" : null,
+        value.length < 5 ? "Level must have at least 5 letters" : null,
       no_telpon: (value) =>
-        value.length < 15 ? "Password must have at least 15 letters" : null,
+        value.length < 13 ? "Password must have at least 13 letters" : null,
     },
   });
   const mutationUpdateSuplier = useUpdateSuplier();

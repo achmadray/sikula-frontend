@@ -21,7 +21,7 @@ export const SuplierDetailPage = () => {
         <Title order={2} mb="md">
           Detail Akun
         </Title>
-        <Text mb="sm">
+        <Text >
           <strong>Nama Suplier:</strong> {suplier.nama_suplier}
         </Text>
         <Text>
@@ -33,7 +33,7 @@ export const SuplierDetailPage = () => {
           {suplier.no_telpon}
         </Text>
         <Group mt="xl" justify="flex-end">
-          <Button variant="default" onClick={() => navigate("data_master/suplier")}>
+          <Button variant="default" onClick={() => navigate("/data_master/suplier")}>
             Kembali
           </Button>
         </Group>

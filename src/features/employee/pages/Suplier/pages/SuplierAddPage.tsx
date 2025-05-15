@@ -20,11 +20,11 @@ export const SuplierAddPage = () => {
     },
     validate: {
       nama_suplier: (value) =>
-        value.length < 20 ? "Username must have at least 20 letters" : null,
+        value.length < 3 ? "Username must have at least 3 letters" : null,
       alamat: (value) =>
-        value.length < 40 ? "Level must have at least 5 letters" : null,
+        value.length < 5 ? "Level must have at least 5 letters" : null,
       no_telpon: (value) =>
-        value.length < 15 ? "Password must have at least 15 letters" : null,
+        value.length < 12 ? "Password must have at least 12 letters" : null,
     },
   });
   const mutationAddSuplier = useAddSuplier();

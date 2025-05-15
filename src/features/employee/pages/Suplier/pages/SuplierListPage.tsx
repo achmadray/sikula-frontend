@@ -64,7 +64,7 @@ export const SuplierListPage = () => {
       <Paper p="lg" shadow="sm" radius="md">
         <Group justify="apart" mb="md">
           <Title order={2}>Daftar Suplier</Title>
-          <Button color="green" onClick={() => navigate("/suplier/tambah")}>
+          <Button color="green" onClick={() => navigate("/data_master/suplier/tambah")}>
             Tambah Suplier
           </Button>
         </Group>
@@ -91,7 +91,7 @@ export const SuplierListPage = () => {
                   variant="subtle"
                   color="gray"
                   onClick={() =>
-                    navigate(`/suplier/detail`,{state:{suplier}})
+                    navigate(`/data_master/suplier/detail`,{state:{suplier}})
                   }
                   size="xs"
                 >
@@ -101,7 +101,7 @@ export const SuplierListPage = () => {
                   variant="light"
                   color="blue"
                   onClick={() =>
-                    navigate(`/suplier/edit/${suplier.id_suplier}`, {
+                    navigate(`/data_master/suplier/edit/${suplier.id_suplier}`, {
                       state: { suplier },
                     })
                   }
