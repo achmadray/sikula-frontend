@@ -8,7 +8,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useAddSuplier } from "../api";
 
-export const SuplierAddPsge = () => {
+export const SuplierAddPage = () => {
   const navigate = useNavigate();
 
   const form = useForm({
