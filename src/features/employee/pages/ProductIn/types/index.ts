@@ -1,5 +1,7 @@
-import { PenggunaType } from "../../Profile/types";
+
 import { ProductType } from "../../Product/types";
+import { PenggunaType } from "../../Profile";
+import { SuplierType } from "../../Suplier";
 
 export type ProductInType = {
   id_barang_masuk: number;

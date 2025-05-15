@@ -88,14 +88,14 @@ export const ProductListPage = () => {
 
   return (
     <Container size="lg" mt="xl">
-      <Paper padding="lg" shadow="sm" radius="md">
+      <Paper p="lg" shadow="sm" radius="md">
         <Group justify="apart" mb="md">
-          <Title order={2}>Daftar Produk</Title>
+          <Title order={2}>Daftar Barang</Title>
           <Button
             color="green"
             onClick={() => navigate("/data_master/barang/tambah")}
           >
-            Tambah Produk
+            Tambah Barang
           </Button>
         </Group>
 
@@ -111,7 +111,7 @@ export const ProductListPage = () => {
             >
               <div className="flex items-center space-x-4">
                 <div className="flex flex-col">
-                  <Text size="lg" weight={600}>
+                  <Text size="lg" fw={600}>
                     {" "}
                     {product.nama_barang}
                   </Text>
