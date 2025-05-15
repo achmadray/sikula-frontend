@@ -13,18 +13,24 @@ import {
   TextInput,
   Select,
   NumberInput,
+  Divider,
 } from "@mantine/core";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import { useGetAllProduct } from "../../Product/api";
 import { ProductType } from "../../Product/types";
-import { IconCaretLeft, IconCaretRight } from "@tabler/icons-react";
+import {
+  IconCaretLeft,
+  IconCaretRight,
+  IconHistory,
+} from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { ProductInType } from "../types";
 import { useAddIncomingProduct } from "../api/addProductIn";
 import { SuplierType, useGetAllSuplier } from "../../Suplier";
+import { useUpdateProduct } from "../../Product/api/updateProduct";
 
 export const ProductInListPage = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -40,7 +46,11 @@ export const ProductInListPage = () => {
   }, [DataSupplier]);
   // END GET SUPPLIER
   const [products, setProducts] = useState<ProductType[]>([]);
-  const { data: DataProducts, isLoading: LoadingProduct } = useGetAllProduct();
+  const {
+    data: DataProducts,
+    isLoading: LoadingProduct,
+    refetch: RefetchProducts,
+  } = useGetAllProduct();
 
   useEffect(() => {
     if (DataProducts) {
@@ -63,6 +73,26 @@ export const ProductInListPage = () => {
     setIncomingStok((prev) => (prev > 0 ? prev - 1 : 0));
   };
   //   End stok
+
+  //   Update stok barang
+  const mutationUpdateProduct = useUpdateProduct();
+  const handleUpdateStok = async () => {
+    const UpdateStokRequest = {
+      id_barang: selectedProduct?.id_barang,
+      stok: selectedProduct?.stok
+        ? parseInt(selectedProduct.stok + incomingStok)
+        : incomingStok,
+    };
+    console.log("Data produk yang di update :", UpdateStokRequest);
+    await mutationUpdateProduct.mutateAsync(UpdateStokRequest, {
+      onSuccess: (data: ProductType) => {
+        console.log("Success update Stok:", data);
+        RefetchProducts();
+        close();
+      },
+    });
+  };
+  //  End update stok barang
 
   const form = useForm({
     initialValues: {
@@ -98,7 +128,8 @@ export const ProductInListPage = () => {
     await mutationAddProduct.mutateAsync(incomingProductData, {
       onSuccess: (data: ProductInType) => {
         console.log("Success:", data);
-        navigate("/barang_masuk");
+        handleUpdateStok();
+        close();
       },
     });
   };
@@ -106,16 +137,18 @@ export const ProductInListPage = () => {
   return (
     <Container size="lg" mt="xl">
       <Paper p="lg" shadow="sm" radius="md">
-        <Group justify="apart" mb="md">
+        <div className="flex justify-between">
           <Title order={2}>Daftar Barang Masuk</Title>
           <Button
-            color="green"
+            color="grey"
             onClick={() => navigate("/data_master/barang/tambah")}
           >
-            Tambah Produk
+            <IconHistory />
           </Button>
-        </Group>
-
+        </div>
+        <div className="mb-5 mt-2">
+            <Divider />
+        </div>
         {LoadingProduct ? (
           <Group justify="center" style={{ marginTop: "20px" }}>
             <Loader size="xl" variant="dots" />
