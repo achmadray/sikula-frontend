@@ -10,7 +10,6 @@ import {
   Loader,
   Modal,
   UnstyledButton,
-  TextInput,
   Select,
   NumberInput,
   Divider,
