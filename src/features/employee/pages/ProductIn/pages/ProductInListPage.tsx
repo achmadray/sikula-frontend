@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -44,6 +43,7 @@ export const ProductInListPage = () => {
     }
   }, [DataSupplier]);
   // END GET SUPPLIER
+
   const [products, setProducts] = useState<ProductType[]>([]);
   const {
     data: DataProducts,
@@ -58,8 +58,7 @@ export const ProductInListPage = () => {
   }, [DataProducts]);
 
   const [selectedProduct, setSelectedProduct] = useState<ProductType>();
-  //   console.log("BArang yang tambuk :", selectedProduct);
-  //   Stok
+
   const [incomingStok, setIncomingStok] = useState<number>(0);
   useEffect(() => {
     setIncomingStok(0);
@@ -140,7 +139,7 @@ export const ProductInListPage = () => {
           <Title order={2}>Daftar Barang Masuk</Title>
           <Button
             color="grey"
-            onClick={() => navigate("/data_master/barang/tambah")}
+            onClick={() => navigate("/barang_masuk/riwayat")}
           >
             <IconHistory />
           </Button>

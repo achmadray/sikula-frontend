@@ -9,6 +9,7 @@ export type ProductInType = {
   id_suplier: number;
   id_pengguna: number;
   harga: string;
+  jumlah: string;
   total_harga: string;
   stok_masuk: string;
   tanggal_masuk: string;
