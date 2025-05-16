@@ -162,6 +162,10 @@ const { ProductInDetailPage } = lazyImport(
   () => import("@/features/employee/pages/ProductIn"),
   "ProductInDetailPage"
 );
+const { ProductInHistoryPage } = lazyImport(
+  () => import("@/features/employee/pages/ProductIn"),
+  "ProductInHistoryPage"
+);
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -198,6 +202,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="barang_masuk">
             <Route index element={<ProductInListPage />} />
             <Route index element={<ProductInDetailPage />} />
+            <Route index element={<ProductInHistoryPage />} />
           </Route>
 
           <Route path="data_master">

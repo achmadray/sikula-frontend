@@ -14,7 +14,7 @@ import { IconEye } from "@tabler/icons-react";
 import { ProductInType } from "../types";
 import { useGetAllProductIn } from "../api/getProductIn";
 
-export const ProductListPage = () => {
+export const ProductInHistoryPage = () => {
   const navigate = useNavigate();
   const [productins, setProductIns] = useState<ProductInType[]>([]);
   const { data: DataProductIns, isLoading: LoadingProductIn } =
