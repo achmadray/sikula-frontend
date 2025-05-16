@@ -15,6 +15,6 @@ export type ProductInType = {
   tanggal_masuk: string;
 
   suplier: SuplierType;
-  product: ProductType;
+  barang: ProductType;
   pengguna: PenggunaType;
 };

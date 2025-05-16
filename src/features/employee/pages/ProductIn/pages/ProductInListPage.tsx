@@ -12,6 +12,8 @@ import {
   Select,
   NumberInput,
   Divider,
+  Stack,
+  Center,
 } from "@mantine/core";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -22,10 +24,10 @@ import {
   IconCaretLeft,
   IconCaretRight,
   IconHistory,
+  IconPlus,
 } from "@tabler/icons-react";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { ProductInType } from "../types";
 import { useAddIncomingProduct } from "../api/addProductIn";
 import { SuplierType, useGetAllSuplier } from "../../Suplier";
 import { useUpdateProduct } from "../../Product/api/updateProduct";
@@ -34,15 +36,11 @@ export const ProductInListPage = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  //   GET SUPPLIER
   const [suppliers, setSuppliers] = useState<SuplierType[]>([]);
   const { data: DataSupplier } = useGetAllSuplier();
   useEffect(() => {
-    if (DataSupplier) {
-      setSuppliers(DataSupplier);
-    }
+    if (DataSupplier) setSuppliers(DataSupplier);
   }, [DataSupplier]);
-  // END GET SUPPLIER
 
   const [products, setProducts] = useState<ProductType[]>([]);
   const {
@@ -52,45 +50,34 @@ export const ProductInListPage = () => {
   } = useGetAllProduct();
 
   useEffect(() => {
-    if (DataProducts) {
-      setProducts(DataProducts);
-    }
+    if (DataProducts) setProducts(DataProducts);
   }, [DataProducts]);
 
   const [selectedProduct, setSelectedProduct] = useState<ProductType>();
-
   const [incomingStok, setIncomingStok] = useState<number>(0);
-  useEffect(() => {
-    setIncomingStok(0);
-  }, [opened]);
-  const handleIncrease = () => {
-    setIncomingStok((prev) => prev + 1);
-  };
 
-  const handleDecrease = () => {
+  useEffect(() => setIncomingStok(0), [opened]);
+
+  const handleIncrease = () => setIncomingStok((prev) => prev + 1);
+  const handleDecrease = () =>
     setIncomingStok((prev) => (prev > 0 ? prev - 1 : 0));
-  };
-  //   End stok
 
-  //   Update stok barang
   const mutationUpdateProduct = useUpdateProduct();
   const handleUpdateStok = async () => {
+    if (!selectedProduct) return;
     const UpdateStokRequest = {
-      id_barang: selectedProduct?.id_barang,
-      stok: selectedProduct?.stok
-        ? parseInt(selectedProduct.stok + incomingStok)
+      id_barang: selectedProduct.id_barang,
+      stok: selectedProduct.stok
+        ? selectedProduct.stok + incomingStok
         : incomingStok,
     };
-    console.log("Data produk yang di update :", UpdateStokRequest);
     await mutationUpdateProduct.mutateAsync(UpdateStokRequest, {
-      onSuccess: (data: ProductType) => {
-        console.log("Success update Stok:", data);
+      onSuccess: () => {
         RefetchProducts();
         close();
       },
     });
   };
-  //  End update stok barang
 
   const form = useForm({
     initialValues: {
@@ -99,43 +86,52 @@ export const ProductInListPage = () => {
       tanggal_masuk: "",
     },
     validate: {
-      harga: (value) =>
-        value < 3 ? "Nama barang harus lebih dari 3 karakter" : null,
+      harga: (value) => (value < 1 ? "Harga harus lebih dari 0" : null),
+      id_supplier: (value) => (!value ? "Pilih supplier" : null),
+      tanggal_masuk: (value) => (!value ? "Tanggal masuk harus diisi" : null),
     },
   });
 
   const mutationAddProduct = useAddIncomingProduct();
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+
+  const handleFormSubmit = form.onSubmit(async (values) => {
+    if (!selectedProduct) {
+      alert("Pilih produk terlebih dahulu");
+      return;
+    }
+
     if (incomingStok <= 0) {
       alert("Stok masuk harus lebih dari 0");
       return;
     }
+
     const incomingProductData = {
-      id_barang: selectedProduct?.id_barang,
-      id_suplier: parseInt(form.values.id_supplier),
-      harga: form.values.harga,
+      id_barang: selectedProduct.id_barang,
+      id_suplier: parseInt(values.id_supplier),
+      harga: values.harga,
       jumlah: incomingStok,
       stok_masuk: incomingStok,
-      total_harga: incomingStok * form.values.harga,
-      tanggal_masuk: format(new Date(form.values.tanggal_masuk), "yyyy-MM-dd"),
+      total_harga: incomingStok * values.harga,
+      tanggal_masuk: format(new Date(values.tanggal_masuk), "yyyy-MM-dd"),
     };
 
-    console.log("Data yang dikirim :", incomingProductData);
-
-    await mutationAddProduct.mutateAsync(incomingProductData, {
-      onSuccess: (data: ProductInType) => {
-        console.log("Success:", data);
-        handleUpdateStok();
-        close();
-      },
-    });
-  };
+    try {
+      await mutationAddProduct.mutateAsync(incomingProductData, {
+        onSuccess: () => {
+          handleUpdateStok();
+          form.reset();
+        },
+      });
+    } catch (error) {
+      alert("Gagal menyimpan data, coba lagi.");
+      console.error(error);
+    }
+  });
 
   return (
     <Container size="lg" mt="xl">
       <Paper p="lg" shadow="sm" radius="md">
-        <div className="flex justify-between">
+        <Group justify="space-between" mb="md">
           <Title order={2}>Daftar Barang Masuk</Title>
           <Button
             leftSection={<IconHistory size={18} />}
@@ -145,99 +141,178 @@ export const ProductInListPage = () => {
           >
             Lihat History
           </Button>
-        </div>
-        <div className="mb-5 mt-2">
-          <Divider />
-        </div>
+        </Group>
+
+        <Divider mb="lg" />
+
         {LoadingProduct ? (
-          <Group justify="center" style={{ marginTop: "20px" }}>
+          <Center mt="md">
             <Loader size="xl" variant="dots" />
-          </Group>
+          </Center>
         ) : (
-          <div className="grid grid-cols-12 gap-4">
-            {products.map((product) => {
-              return (
-                <div
-                  key={product.id_barang}
-                  className="col-span-4 mb-4 p-4 bg-gray-50 rounded-lg shadow-lg hover:shadow-xl transition-all"
-                >
-                  <UnstyledButton
-                    onClick={() => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {products.map((product) => (
+              <Paper
+                key={product.id_barang}
+                shadow="md"
+                radius="lg"
+                withBorder
+                p="md"
+                className="hover:shadow-xl transition-all cursor-pointer"
+                onClick={() => {
+                  open();
+                  setSelectedProduct(product);
+                }}
+              >
+                <Stack spacing={4}>
+                  <Text size="lg" fw={600}>
+                    {product.nama_barang}
+                  </Text>
+
+                  <Text size="sm" c="dimmed">
+                    Stok: <strong>{product.stok}</strong>
+                  </Text>
+
+                  <Button
+                    leftSection={<IconPlus size={16} />}
+                    variant="light"
+                    fullWidth
+                    mt="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       open();
                       setSelectedProduct(product);
                     }}
                   >
-                    <div className="flex flex-col">
-                      <Text size="lg" fw={600}>
-                        {product.nama_barang}
-                      </Text>
-                      <Text size="lg" fw={600}>
-                        Stok: {product.stok}
-                      </Text>
-                    </div>
-                  </UnstyledButton>
-                </div>
-              );
-            })}
+                    Tambah Stok
+                  </Button>
+                </Stack>
+              </Paper>
+            ))}
           </div>
         )}
       </Paper>
-      <Modal opened={opened} title="Barang masuk" onClose={close}>
-        <div className="flex justify-center mb-20">
-          <form onSubmit={handleFormSubmit}>
-            <div className="text-center">
-              <Text fw={"bolder"} size="xl">
-                {selectedProduct?.nama_barang}
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        withCloseButton
+        size="sm"
+        centered
+        padding="md"
+        transitionProps={{ transition: "slide-up" }}
+      >
+        <form onSubmit={handleFormSubmit}>
+          <Stack spacing={16}>
+            <Text align="center" size="xl" fw={700} mb="xs">
+              Tambah Barang Masuk
+            </Text>
+
+            <Text align="center" size="lg" fw={600} c="dimmed" mb="sm">
+              {selectedProduct?.nama_barang ?? "Nama Barang"}
+            </Text>
+
+            <Group justify="center" align="center" spacing="xl" mb="md">
+              <UnstyledButton
+                onClick={handleDecrease}
+                style={{
+                  borderRadius: "50%",
+                  border: "2px solid #1971c2",
+                  padding: 12,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 48,
+                  height: 48,
+                  cursor: "pointer",
+                  transition: "background-color 0.3s, color 0.3s",
+                  color: "#1971c2",
+                  userSelect: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1971c2";
+                  e.currentTarget.style.color = "white";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "#1971c2";
+                }}
+                aria-label="Kurangi jumlah"
+                type="button"
+              >
+                <IconCaretLeft size={28} stroke={3} />
+              </UnstyledButton>
+
+              <Text
+                size="xl"
+                fw={700}
+                style={{ minWidth: 50, textAlign: "center" }}
+              >
+                {incomingStok}
               </Text>
-            </div>
-            <div className="flex justify-between gap-4">
-              <div className="shadow-md">
-                <UnstyledButton size="xl" onClick={handleDecrease}>
-                  <IconCaretLeft size={40} />
-                </UnstyledButton>
-              </div>
-              <div>
-                <Text size="50px" fw={"bold"}>
-                  {incomingStok}
-                </Text>
-              </div>
-              <div className="shadow-md">
-                <UnstyledButton size="xl" onClick={handleIncrease}>
-                  <IconCaretRight size={40} />
-                </UnstyledButton>
-              </div>
-            </div>
-            <div>
-              <NumberInput
-                label="Harga"
-                {...form.getInputProps("harga")}
-                key={form.key("harga")}
-              />
-            </div>
-            <div>
-              <DatePickerInput
-                label="Tanggal masuk"
-                {...form.getInputProps("tanggal_masuk")}
-                key={form.key("tanggal_masuk")}
-              />
-            </div>
-            <div>
-              <Select
-                label="Supplier"
-                {...form.getInputProps("id_supplier")}
-                data={suppliers?.map((data: SuplierType) => ({
-                  value: data.id_suplier.toString(),
-                  label: data.nama_suplier,
-                }))}
-              />
-            </div>
-            <div className="mt-7">
-              <Button fullWidth type="submit">
-                Simpan
-              </Button>
-            </div>
-          </form>
-        </div>
+
+              <UnstyledButton
+                onClick={handleIncrease}
+                style={{
+                  borderRadius: "50%",
+                  border: "2px solid #1971c2",
+                  padding: 12,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 48,
+                  height: 48,
+                  cursor: "pointer",
+                  transition: "background-color 0.3s, color 0.3s",
+                  color: "#1971c2",
+                  userSelect: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1971c2";
+                  e.currentTarget.style.color = "white";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "#1971c2";
+                }}
+                aria-label="Tambah jumlah"
+                type="button"
+              >
+                <IconCaretRight size={28} stroke={3} />
+              </UnstyledButton>
+            </Group>
+
+            <NumberInput
+              label="Harga Satuan (Rp)"
+              placeholder="Masukkan harga"
+              required
+              min={1}
+              {...form.getInputProps("harga")}
+            />
+
+            <DatePickerInput
+              label="Tanggal Masuk"
+              placeholder="Pilih tanggal"
+              required
+              {...form.getInputProps("tanggal_masuk")}
+            />
+
+            <Select
+              label="Supplier"
+              placeholder="Pilih supplier"
+              data={suppliers.map((s) => ({
+                value: s.id_suplier.toString(),
+                label: s.nama_suplier,
+              }))}
+              required
+              {...form.getInputProps("id_supplier")}
+            />
+
+            <Button fullWidth size="md" type="submit" mt="md">
+              Simpan
+            </Button>
+          </Stack>
+        </form>
       </Modal>
     </Container>
   );
