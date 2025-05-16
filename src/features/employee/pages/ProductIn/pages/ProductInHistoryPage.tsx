@@ -35,7 +35,7 @@ export const ProductInHistoryPage = () => {
 
   return (
     <Container size="lg" mt="xl" mb="xl">
-      <Group position="apart" mb="lg">
+      <Group justify="apart" mb="lg">
         <Title order={2}>Riwayat Barang Masuk</Title>
         <Button variant="outline" onClick={() => navigate("/barang_masuk")}>
           Kembali ke Daftar
@@ -67,7 +67,7 @@ export const ProductInHistoryPage = () => {
                     navigate("/barang_masuk/detail", { state: { productin: item } })
                   }
                 >
-                  <Group position="apart" align="center" noWrap style={{ gap: 8 }}>
+                  <Group justify="apart" align="center" noWrap style={{ gap: 8 }}>
                     <Stack spacing={4} style={{ flex: 1, minWidth: 0 }}>
                       <Group noWrap style={{ gap: 4 }}>
                         <IconPackage size={20} />
