@@ -54,7 +54,9 @@ export const BiodataPage: React.FC = () => {
           >
             Edit
           </Button>
-          <Button onClick={() => navigate(-1)} fullWidth color="red">
+          <Button
+            variant="default"
+            onClick={() => navigate("/data_master/barang")}>
             Kembali
           </Button>
         </div>

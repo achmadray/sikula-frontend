@@ -84,14 +84,11 @@ export const BiodataUpdatePage = () => {
           Simpan
         </Button>
         <Button
-          onClick={() => {
-            navigate(-1);
-          }}
-          color="red"
-          mt="md"
-        >
-          Kembali
-        </Button>
+            variant="default"
+            onClick={() => navigate("/data_master/biodata")}
+          >
+            Kembali
+          </Button>
       </form>
     </Paper>
   );

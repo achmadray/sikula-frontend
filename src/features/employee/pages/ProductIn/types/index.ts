@@ -1,6 +1,6 @@
 
 import { ProductType } from "../../Product/types";
-import { PenggunaType } from "../../Profile";
+import { PenggunaType } from "../../Profile/types";
 import { SuplierType } from "../../Suplier";
 
 export type ProductInType = {

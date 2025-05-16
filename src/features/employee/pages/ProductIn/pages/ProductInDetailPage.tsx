@@ -62,10 +62,10 @@ export const ProductInDetailPage = () => {
                 </Badge>
               </Text>
 
-              <Text size="sm">
-                <strong>Pengguna:</strong>{" "}
+              <Text mb="sm">
+                <strong>Pelaku:</strong>{" "}
                 <Badge color="grape" variant="light">
-                  {productin.pengguna?.nama_pengguna ?? "-"}
+                  {productin.pengguna.nama_pengguna ?? '-'}
                 </Badge>
               </Text>
 
