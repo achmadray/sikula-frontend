@@ -12,8 +12,6 @@ export const HistoryMenu: React.FC = () => {
       <h4 className="text-brown font-bold text-[15px]">
         Riwayat Data :
       </h4>
-
-      {/* Riwayat Barang Masuk */}
       <Link
         to="/history/barang-masuk"
         className="bg-white rounded-lg shadow-lg p-4 flex items-center justify-between text-sm"
@@ -29,8 +27,6 @@ export const HistoryMenu: React.FC = () => {
         </div>
         <IconChevronRight className="text-brown" size={25} />
       </Link>
-
-      {/* Riwayat Barang Keluar */}
       <Link
         to="/history/barang-keluar"
         className="bg-white rounded-lg shadow-lg p-4 flex items-center justify-between text-sm"
