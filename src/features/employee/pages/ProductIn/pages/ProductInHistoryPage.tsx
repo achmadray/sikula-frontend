@@ -4,10 +4,10 @@ import {
   Text,
   Container,
   Paper,
-  Title,
   Group,
   Badge,
   Loader,
+  Title,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconEye } from "@tabler/icons-react";
@@ -25,75 +25,48 @@ export const ProductInHistoryPage = () => {
       setProductIns(DataProductIns);
     }
   }, [DataProductIns]);
+  console.log("data yang masuk", productins);
 
   return (
     <Container size="lg" mt="xl">
-      <Paper p="lg" shadow="sm" radius="md">
-        <Group justify="apart" mb="md">
-          <Title order={2}>Daftar Barang</Title>
-          <Button
-            color="green"
-            onClick={() => navigate("/barang_masuk/tambah")}
-          >
-            Tambah Barang Masuk
-          </Button>
-        </Group>
+      <Group p="apart" mb="lg">
+        <Title order={3}>Riwayat Barang Masuk</Title>
+        <Button variant="outline" onClick={() => navigate("/barang_masuk")}>
+          Kembali ke Daftar
+        </Button>
+      </Group>
 
+      <Paper p="lg" shadow="sm" radius="md">
         {LoadingProductIn ? (
-          <Group justify="center" style={{ marginTop: "20px" }}>
+          <Group justify="center" mt="md">
             <Loader size="xl" variant="dots" />
           </Group>
         ) : (
           productins.map((productin) => (
-            <div
+            <Paper
               key={productin.id_barang}
-              className="flex justify-between mb-4 p-4 bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-all"
+              withBorder
+              radius="md"
+              p="md"
+              mb="md"
+              className="hover:shadow-md transition-all"
             >
-              <div className="flex items-center space-x-4">
-                <div className="flex flex-col">
-                  <Text size="lg" fw={600}>
-                    {"Harga"}
-                    {productin.harga}
+              <Group justify="apart" align="start">
+                <div className="flex flex-col gap-2">
+                  <Text size="sm">
+                    <strong>Nama Barang:</strong>{" "}
+                    <Badge color="grape" variant="light">
+                      {productin.product?.nama_barang}
+                    </Badge>
+                  </Text>
+                  <Text size="sm">
+                    <strong>Stok Masuk:</strong> {productin.stok_masuk}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Tanggal Masuk:</strong> {productin.tanggal_masuk}
                   </Text>
                 </div>
-                <div className="flex flex-col">
-                  <Text size="lg" fw={600}>
-                    {"Jumlah"}
-                    {productin.jumlah}
-                  </Text>
-                </div>
-                <div className="flex flex-col">
-                  <Text size="lg" fw={600}>
-                    {"Total Harga"}
-                    {productin.total_harga}
-                  </Text>
-                </div>
-                <div className="flex flex-col">
-                  <Text size="lg" fw={600}>
-                    {"Stok Masuk"}
-                    {productin.stok_masuk}
-                  </Text>
-                </div>
-                <div className="flex flex-col">
-                  <Text size="lg" fw={600}>
-                    {"Tanggal Masuk"}
-                    {productin.tanggal_masuk}
-                  </Text>
-                </div>
-                <Text mb="sm">
-                  <strong>Nama Barang:</strong>{" "}
-                  <Badge color="grape" variant="light">
-                    {productin.product.nama_barang}
-                  </Badge>
-                </Text>
-                <Text mb="sm">
-                  <strong>Suplier:</strong>{" "}
-                  <Badge color="grape" variant="light">
-                    {productin.suplier.nama_suplier}
-                  </Badge>
-                </Text>
-              </div>
-              <div className="flex items-center space-x-2">
+
                 <Button
                   variant="subtle"
                   color="gray"
@@ -103,11 +76,12 @@ export const ProductInHistoryPage = () => {
                     })
                   }
                   size="xs"
+                  leftSection={<IconEye size={16} />}
                 >
-                  <IconEye />
+                  Detail
                 </Button>
-              </div>
-            </div>
+              </Group>
+            </Paper>
           ))
         )}
       </Paper>

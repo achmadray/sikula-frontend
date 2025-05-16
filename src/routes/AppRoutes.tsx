@@ -198,12 +198,17 @@ export const AppRoutes: React.FC = () => {
           <Route path="data_master">
             <Route index element={<DataMasterPage />} />
           </Route>
-
-          <Route path="barang_masuk">
-            <Route index element={<ProductInListPage />} />
-            <Route index element={<ProductInDetailPage />} />
-            <Route index element={<ProductInHistoryPage />} />
-          </Route>
+            <Route path="barang_masuk">
+              <Route path="/barang_masuk" element={<ProductInListPage />} />
+              <Route
+                path="/barang_masuk/history"
+                element={<ProductInHistoryPage />}
+              />
+              <Route
+                path="/barang_masuk/detail"
+                element={<ProductInDetailPage />}
+              />
+            </Route>
 
           <Route path="data_master">
             <Route path="barang" element={<ProductListPage />} />
@@ -224,12 +229,12 @@ export const AppRoutes: React.FC = () => {
             <Route path="menu" element={<MenuListPage />} />
             <Route path="menu/tambah" element={<MenuAddPage />} />
             <Route path="menu/edit/:id" element={<MenuUpdatePage />} />
-            <Route path="menu/detail" element={<MenuDetailPage/>} />
+            <Route path="menu/detail" element={<MenuDetailPage />} />
 
             <Route path="suplier" element={<SuplierListPage />} />
             <Route path="suplier/tambah" element={<SuplierAddPage />} />
             <Route path="suplier/edit/:id" element={<SuplierUpdatePage />} />
-            <Route path="suplier/detail" element={<SuplierDetailPage/>} />
+            <Route path="suplier/detail" element={<SuplierDetailPage />} />
           </Route>
         </Route>
       </Route>

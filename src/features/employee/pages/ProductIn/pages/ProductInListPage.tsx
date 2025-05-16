@@ -138,14 +138,16 @@ export const ProductInListPage = () => {
         <div className="flex justify-between">
           <Title order={2}>Daftar Barang Masuk</Title>
           <Button
-            color="grey"
-            onClick={() => navigate("/barang_masuk/riwayat")}
+            leftSection={<IconHistory size={18} />}
+            color="gray"
+            variant="outline"
+            onClick={() => navigate("/barang_masuk/history")}
           >
-            <IconHistory />
+            Lihat History
           </Button>
         </div>
         <div className="mb-5 mt-2">
-            <Divider />
+          <Divider />
         </div>
         {LoadingProduct ? (
           <Group justify="center" style={{ marginTop: "20px" }}>
