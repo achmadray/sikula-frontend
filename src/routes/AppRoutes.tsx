@@ -170,14 +170,14 @@ const { ProductOutListPage } = lazyImport(
   () => import("@/features/employee/pages/ProductOut"),
   "ProductOutListPage"
 );
-// const { ProductOutDetailPage } = lazyImport(
-//   () => import("@/features/employee/pages/ProductOut"),
-//   "ProductOutDetailPage"
-// );
-// const { ProductOutHistoryPage } = lazyImport(
-//   () => import("@/features/employee/pages/ProductOut"),
-//   "ProductOutHistoryPage"
-// );
+const { ProductOutDetailPage } = lazyImport(
+  () => import("@/features/employee/pages/ProductOut"),
+  "ProductOutDetailPage"
+);
+const { ProductOutHistoryPage } = lazyImport(
+  () => import("@/features/employee/pages/ProductOut"),
+  "ProductOutHistoryPage"
+);
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -221,16 +221,16 @@ export const AppRoutes: React.FC = () => {
             />
           </Route>
 
-          <Route path="barang_kelaur">
+          <Route path="barang_keluar">
             <Route path="/barang_keluar" element={<ProductOutListPage />} />
-            {/* <Route
-              path="/barang_masuk/history"
-              element={<ProductInHistoryPage />}
+            <Route
+              path="/barang_keluar/history"
+              element={<ProductOutHistoryPage />}
             />
             <Route
               path="/barang_masuk/detail"
               element={<ProductInDetailPage />}
-            /> */}
+            />
           </Route>
 
           <Route path="data_master">
