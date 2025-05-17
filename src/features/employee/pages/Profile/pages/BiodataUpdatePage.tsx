@@ -85,7 +85,7 @@ export const BiodataUpdatePage = () => {
         </Button>
         <Button
             variant="default"
-            onClick={() => navigate("/data_master/biodata")}
+            onClick={() => navigate("/profile/biodata")}
           >
             Kembali
           </Button>

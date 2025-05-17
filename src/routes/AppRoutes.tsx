@@ -166,7 +166,18 @@ const { ProductInHistoryPage } = lazyImport(
   () => import("@/features/employee/pages/ProductIn"),
   "ProductInHistoryPage"
 );
-
+const { ProductOutListPage } = lazyImport(
+  () => import("@/features/employee/pages/ProductOut"),
+  "ProductOutListPage"
+);
+// const { ProductOutDetailPage } = lazyImport(
+//   () => import("@/features/employee/pages/ProductOut"),
+//   "ProductOutDetailPage"
+// );
+// const { ProductOutHistoryPage } = lazyImport(
+//   () => import("@/features/employee/pages/ProductOut"),
+//   "ProductOutHistoryPage"
+// );
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -198,17 +209,29 @@ export const AppRoutes: React.FC = () => {
           <Route path="data_master">
             <Route index element={<DataMasterPage />} />
           </Route>
-            <Route path="barang_masuk">
-              <Route path="/barang_masuk" element={<ProductInListPage />} />
-              <Route
-                path="/barang_masuk/history"
-                element={<ProductInHistoryPage />}
-              />
-              <Route
-                path="/barang_masuk/detail"
-                element={<ProductInDetailPage />}
-              />
-            </Route>
+          <Route path="barang_masuk">
+            <Route path="/barang_masuk" element={<ProductInListPage />} />
+            <Route
+              path="/barang_masuk/history"
+              element={<ProductInHistoryPage />}
+            />
+            <Route
+              path="/barang_masuk/detail"
+              element={<ProductInDetailPage />}
+            />
+          </Route>
+
+          <Route path="barang_kelaur">
+            <Route path="/barang_keluar" element={<ProductOutListPage />} />
+            {/* <Route
+              path="/barang_masuk/history"
+              element={<ProductInHistoryPage />}
+            />
+            <Route
+              path="/barang_masuk/detail"
+              element={<ProductInDetailPage />}
+            /> */}
+          </Route>
 
           <Route path="data_master">
             <Route path="barang" element={<ProductListPage />} />

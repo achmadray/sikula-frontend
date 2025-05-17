@@ -56,7 +56,7 @@ export const BiodataPage: React.FC = () => {
           </Button>
           <Button
             variant="default"
-            onClick={() => navigate("/data_master/barang")}>
+            onClick={() => navigate("/profile")}>
             Kembali
           </Button>
         </div>
