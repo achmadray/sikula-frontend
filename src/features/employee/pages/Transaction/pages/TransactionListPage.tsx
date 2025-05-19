@@ -6,17 +6,22 @@ import {
   Paper,
   Title,
   Group,
-  Badge,
   Loader,
   Modal,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { IconEye, IconTrash } from "@tabler/icons-react";
+import { IconEye, IconTrash, IconCash } from "@tabler/icons-react";
 import Swal from "sweetalert2";
 import { useDisclosure } from "@mantine/hooks";
 import { TransaksiType } from "../types";
 import { useGetAllTransaction } from "../api/getTransaction";
 import { useDeleteTransaction } from "../api/deleteTransaction";
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 export const TransactionListPage = () => {
   const navigate = useNavigate();
@@ -61,65 +66,125 @@ export const TransactionListPage = () => {
     }
   };
 
+  const handlePayment = async (trx: TransaksiType) => {
+    try {
+      const response = await fetch(
+        `/api/transaksi/${trx.id_transaksi}/payment-token`
+      );
+      const data = await response.json();
+
+      if (data.snap_token) {
+        window.snap.pay(data.snap_token, {
+          onSuccess: () => {
+            Swal.fire("Pembayaran berhasil!", "", "success");
+            setTransactions((prev) =>
+              prev.map((t) =>
+                t.id_transaksi === trx.id_transaksi
+                  ? { ...t, status_pembayaran: "lunas" }
+                  : t
+              )
+            );
+          },
+          onPending: () => {
+            Swal.fire("Pembayaran menunggu konfirmasi", "", "info");
+          },
+          onError: () => {
+            Swal.fire("Pembayaran gagal!", "", "error");
+          },
+          onClose: () => {
+            Swal.fire("Pembayaran dibatalkan", "", "warning");
+          },
+        });
+      } else {
+        Swal.fire("Gagal mendapatkan snap token", "", "error");
+      }
+    } catch {
+      Swal.fire("Error saat proses pembayaran", "", "error");
+    }
+  };
+
   return (
     <Container size="lg" mt="xl">
       <Paper p="lg" shadow="sm" radius="md">
-        <Group justify="apart" mb="md">
-          <Title order={2}>Daftar Transaksi</Title>
+        <Group justify="space-between" mb="md">
+          <Title order={2} size="h4">
+            Daftar Transaksi
+          </Title>
           <Button
             color="green"
-            onClick={() => navigate("/kasir/transaksi/tambah")}
+            size="sm"
+            onClick={() => navigate("/kasir/tambah")}
           >
             Tambah Transaksi
           </Button>
         </Group>
 
         {LoadingTransaction ? (
-          <Group justify="center" style={{ marginTop: "20px" }}>
+          <Group justify="center" mt="20px">
             <Loader size="xl" variant="dots" />
           </Group>
         ) : (
           transactions.map((trx) => (
             <div
               key={trx.id_transaksi}
-              className="flex justify-between mb-4 p-4 bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-all"
+              className="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-4 p-4 bg-gray-50 rounded-lg shadow hover:shadow-md transition-all"
             >
-              <div className="flex flex-col">
-                <Text size="lg" fw={600}>
+              <div>
+                <Text size="md" fw={600} className="text-gray-800">
                   #{trx.no_urut} - {trx.nama_order}
                 </Text>
-                <Text size="sm" color="dimmed">
-                  {trx.tanggal_transaksi} | Total: Rp
-                  {trx.total_transaksi.toLocaleString()}
+                <Text size="sm" fw={600} color="black">
+                  Status:{" "}
+                  <Text
+                    component="span"
+                    fw={600}
+                    color={
+                      trx.status_pembayaran === "lunas"
+                        ? "green"
+                        : trx.status_pembayaran === "pending"
+                        ? "yellow"
+                        : "red"
+                    }
+                  >
+                    {trx.status_pembayaran}
+                  </Text>
                 </Text>
-                <Badge
-                  color={trx.status_pembayaran === "lunas" ? "green" : "yellow"}
-                  mt={4}
-                >
-                  {trx.status_pembayaran.toUpperCase()}
-                </Badge>
               </div>
-
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="subtle"
                   color="gray"
                   onClick={() =>
-                    navigate(`/kasir/transaksi/detail`, {
+                    navigate(`/kasir/kasir/detail`, {
                       state: { transaksi: trx },
                     })
                   }
                   size="xs"
+                  px={10}
                 >
-                  <IconEye />
+                  <IconEye size={16} />
                 </Button>
+
+                {trx.status_pembayaran === "pending" && (
+                  <Button
+                    variant="light"
+                    color="blue"
+                    onClick={() => handlePayment(trx)}
+                    size="xs"
+                    px={10}
+                  >
+                    <IconCash size={16} />
+                  </Button>
+                )}
+
                 <Button
                   variant="outline"
                   color="red"
                   onClick={() => openDeleteModal(trx)}
                   size="xs"
+                  px={10}
                 >
-                  <IconTrash />
+                  <IconTrash size={16} />
                 </Button>
               </div>
             </div>
@@ -131,16 +196,17 @@ export const TransactionListPage = () => {
         opened={opened}
         onClose={close}
         centered
-        title={<span className="font-bold">Konfirmasi Hapus Transaksi</span>}
+        title={<Text fw={600}>Konfirmasi Hapus Transaksi</Text>}
       >
-        <div>
-          <span>Yakin ingin menghapus transaksi</span>{" "}
-          <span className="font-semibold text-blue-600">
+        <Text mb="sm" size="sm">
+          Yakin ingin menghapus transaksi{" "}
+          <Text span fw={600} c="blue">
             #{selectedTransaction?.no_urut}
-          </span>
+          </Text>
           ?
-        </div>
-        <div className="pt-10 flex gap-2 justify-end">
+        </Text>
+
+        <Group justify="end" mt="md">
           {deleteTransactionMutation.isPending ? (
             <Button color="red" disabled>
               Menghapus...
@@ -148,10 +214,10 @@ export const TransactionListPage = () => {
           ) : (
             <Button onClick={deleteTransaction}>Yakin</Button>
           )}
-          <Button color="red" onClick={close}>
+          <Button color="gray" variant="outline" onClick={close}>
             Batal
           </Button>
-        </div>
+        </Group>
       </Modal>
     </Container>
   );

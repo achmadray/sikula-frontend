@@ -182,6 +182,19 @@ const { TransactionListPage } = lazyImport(
   () => import("@/features/employee/pages/Transaction"),
   "TransactionListPage"
 );
+const { TransactionAddPage } = lazyImport(
+  () => import("@/features/employee/pages/Transaction"),
+  "TransactionAddPage"
+);
+
+const { DetailListPage } = lazyImport(
+  () => import("@/features/employee/pages/Detail"),
+  "DetailListPage"
+);
+const { DetailDetailPage } = lazyImport(
+  () => import("@/features/employee/pages/Detail"),
+  "DetailDetailPage"
+);
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -237,8 +250,14 @@ export const AppRoutes: React.FC = () => {
             />
           </Route>
 
-           <Route path="transaksi">
+           <Route path="detail_transaksi">
+            <Route path="/detail_transaksi" element={<DetailListPage />} />
+            <Route path="/detail_transaksi/detail" element={<DetailDetailPage />} />
+            </Route>
+
+            <Route path="kasir">
             <Route path="/kasir" element={<TransactionListPage />} />
+            <Route path="/kasir/tambah" element={<TransactionAddPage />} />
             </Route>
           <Route path="data_master">
             <Route path="barang" element={<ProductListPage />} />

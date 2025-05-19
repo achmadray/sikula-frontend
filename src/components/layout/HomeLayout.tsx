@@ -7,7 +7,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { Suspense, useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { LoadingScreen } from "../elements";
 import { NavItem } from "../navigation/BottomNav/NavItem";
 

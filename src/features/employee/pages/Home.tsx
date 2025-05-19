@@ -29,7 +29,7 @@ const navigations = [
   },
   {
     title: "Detail Transaksi",
-    href: "/detail-transaksi",
+    href: "/detail_transaksi",
     icon: IconClipboardList,
     color: "bg-pink-600",
   },
