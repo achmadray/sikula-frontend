@@ -1,10 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { ProductType } from "../types"; 
 
 const BaseURL = import.meta.env.VITE_API_URL;
+interface CreateProductRequest {
+  nama_barang: string;
+  kode_barang: string;
+  id_satuan: number;
+  stok: number;
+  id_pengguna: number;
+}
 
-export const postAddProduct = async (productData: ProductType) => {
+export const postAddProduct = async (productData: CreateProductRequest) => {
   console.log("Data yang dikirim:", productData);
   const response = await axios.post(`${BaseURL}/barang`, productData);
   return response.data;
@@ -13,7 +19,7 @@ export const postAddProduct = async (productData: ProductType) => {
 export const useAddProduct = () => {
   return useMutation({
     mutationFn: postAddProduct,
-    onMutate: async (productData: ProductType) => {
+    onMutate: async (productData: CreateProductRequest) => {
       console.log("Mutating data:", productData);
     },
     onError: (error) => {

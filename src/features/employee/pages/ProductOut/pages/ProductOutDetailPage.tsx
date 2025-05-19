@@ -15,7 +15,7 @@ export const ProductOutDetailPage = () => {
   const location = useLocation();
 
   const productout = location.state?.productout as ProductOutType | undefined;
-
+  console.log("DATA PRODUK DARI DETAIL :", productout);
   if (!productout) {
     return (
       <Container size="lg" mt="xl" style={{ textAlign: "center" }}>
@@ -45,14 +45,14 @@ export const ProductOutDetailPage = () => {
               <Text size="sm">
                 <strong>Nama Barang:</strong>{" "}
                 <Badge color="grape" variant="light">
-                  {productout.barang?.nama_barang ?? "-"}
+                  {productout.barang?.nama_barang}
                 </Badge>
               </Text>
 
               <Text size="sm">
                 <strong>Pengguna:</strong>{" "}
                 <Badge color="grape" variant="light">
-                  {productout.pengguna?.nama_pengguna ?? "-"}
+                  {productout.pengguna?.nama_pengguna}
                 </Badge>
               </Text>
 
@@ -67,7 +67,9 @@ export const ProductOutDetailPage = () => {
               <Text size="sm">
                 <strong>Tanggal Keluar:</strong>{" "}
                 {productout.tanggal_keluar
-                  ? new Date(productout.tanggal_keluar).toLocaleDateString("id-ID")
+                  ? new Date(productout.tanggal_keluar).toLocaleDateString(
+                      "id-ID"
+                    )
                   : "-"}
               </Text>
 

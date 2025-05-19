@@ -18,7 +18,6 @@ import {
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import { useGetAllProduct } from "../../Product/api";
 import { ProductType } from "../../Product/types";
 import {
   IconCaretLeft,
@@ -30,6 +29,7 @@ import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useAddIncomingProduct } from "../api/addProductIn";
 import { SuplierType, useGetAllSuplier } from "../../Suplier";
+import { useGetAllProduct } from "../../Product/api";
 import { useUpdateProduct } from "../../Product/api/updateProduct";
 
 export const ProductInListPage = () => {
@@ -38,6 +38,7 @@ export const ProductInListPage = () => {
 
   const [suppliers, setSuppliers] = useState<SuplierType[]>([]);
   const { data: DataSupplier } = useGetAllSuplier();
+
   useEffect(() => {
     if (DataSupplier) setSuppliers(DataSupplier);
   }, [DataSupplier]);
@@ -68,7 +69,7 @@ export const ProductInListPage = () => {
     const UpdateStokRequest = {
       id_barang: selectedProduct.id_barang,
       stok: selectedProduct.stok
-        ? selectedProduct.stok + incomingStok
+        ? parseInt(selectedProduct.stok + incomingStok)
         : incomingStok,
     };
     await mutationUpdateProduct.mutateAsync(UpdateStokRequest, {
@@ -113,6 +114,7 @@ export const ProductInListPage = () => {
       stok_masuk: incomingStok,
       total_harga: incomingStok * values.harga,
       tanggal_masuk: format(new Date(values.tanggal_masuk), "yyyy-MM-dd"),
+      id_pengguna: 1, //SEMENTARA
     };
 
     try {
@@ -164,7 +166,7 @@ export const ProductInListPage = () => {
                   setSelectedProduct(product);
                 }}
               >
-                <Stack spacing={4}>
+                <Stack>
                   <Text size="lg" fw={600}>
                     {product.nama_barang}
                   </Text>
@@ -203,16 +205,17 @@ export const ProductInListPage = () => {
         transitionProps={{ transition: "slide-up" }}
       >
         <form onSubmit={handleFormSubmit}>
-          <Stack spacing={16}>
-            <Text align="center" size="xl" fw={700} mb="xs">
+          <Stack>
+            <Text size="xl" fw={700} mb="xs">
               Tambah Barang Masuk
             </Text>
+            <div className="text-center">
+              <Text size="lg" fw={600} c="dimmed" mb="sm">
+                {selectedProduct?.nama_barang ?? "Nama Barang"}
+              </Text>
+            </div>
 
-            <Text align="center" size="lg" fw={600} c="dimmed" mb="sm">
-              {selectedProduct?.nama_barang ?? "Nama Barang"}
-            </Text>
-
-            <Group justify="center" align="center" spacing="xl" mb="md">
+            <Group justify="center" align="center" mb="md">
               <UnstyledButton
                 onClick={handleDecrease}
                 style={{

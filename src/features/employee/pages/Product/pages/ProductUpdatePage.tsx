@@ -7,19 +7,19 @@ import { useEffect, useState } from "react";
 import { UnitType, useGetAllUnit } from "../../Unit";
 
 export const ProductUpdatePage = () => {
-  const [units,setUnit] = useState<UnitType[]>([]);
-  const {data:DataUnit} = useGetAllUnit();
-  useEffect(()=>{
-    if(DataUnit){
-      setUnit(DataUnit)
+  const [units, setUnit] = useState<UnitType[]>([]);
+  const { data: DataUnit } = useGetAllUnit();
+  useEffect(() => {
+    if (DataUnit) {
+      setUnit(DataUnit);
     }
-  },[DataUnit])
+  }, [DataUnit]);
   const location = useLocation();
   const product = location.state.product as ProductType;
-  console.log("data barang: ", product)
+  console.log("data barang: ", product);
   const navigate = useNavigate();
 
-  const selectUnit = units.map((unit) =>({
+  const selectUnit = units.map((unit) => ({
     value: unit.id_satuan.toString(),
     label: unit.nama_satuan,
   }));
@@ -30,7 +30,7 @@ export const ProductUpdatePage = () => {
       nama_barang: product?.nama_barang || "",
       kode_barang: product?.kode_barang || "",
       id_satuan: product?.id_satuan.toString() || "",
-      stok: product?.stok || ""
+      stok: product?.stok || "",
     },
 
     validate: {
@@ -47,11 +47,11 @@ export const ProductUpdatePage = () => {
 
     const ProductData = {
       id_barang: product.id_barang,
-      id_satuan: form.values.id_satuan,
+      id_satuan: parseInt(form.values.id_satuan),
       id_pengguna: product.id_pengguna,
       nama_barang: form.values.nama_barang,
       kode_barang: form.values.kode_barang,
-      stok: form.values.stok,
+      stok: parseInt(form.values.stok),
     };
     await mutationUpdateProduct.mutateAsync(ProductData, {
       onSuccess: (data) => {

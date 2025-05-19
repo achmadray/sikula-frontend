@@ -13,7 +13,7 @@ export const HistoryMenu: React.FC = () => {
         Riwayat Data :
       </h4>
       <Link
-        to="/history/barang-masuk"
+        to="/barang_masuk/history"
         className="bg-white rounded-lg shadow-lg p-4 flex items-center justify-between text-sm"
       >
         <div className="flex gap-3 items-center">
@@ -28,7 +28,7 @@ export const HistoryMenu: React.FC = () => {
         <IconChevronRight className="text-brown" size={25} />
       </Link>
       <Link
-        to="/history/barang-keluar"
+        to="/barang_keluar/history"
         className="bg-white rounded-lg shadow-lg p-4 flex items-center justify-between text-sm"
       >
         <div className="flex gap-3 items-center">

@@ -29,7 +29,7 @@ export const UnitAddPage = () => {
     await mutationAddUnit.mutateAsync(unitData, {
       onSuccess: (data) => {
         console.log("Success:", data);
-        navigate("/data_master/unit", {});
+        navigate("/data_master/satuan", {});
       },
     });
   };

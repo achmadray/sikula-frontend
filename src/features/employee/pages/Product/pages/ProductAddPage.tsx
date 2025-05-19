@@ -3,24 +3,22 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useAddProduct } from "../api/addProduct";
 import { useGetAllUnit } from "../../Unit";
-import { useGetPenggunaByAkunId } from "../../Profile";
 import { UnitType } from "../../Unit/types";
 
 export const ProductAddPage = () => {
   const navigate = useNavigate();
   const { data: units, isLoading: loadingUnits } = useGetAllUnit();
-  const { data: pengguna, isLoading: loadingPengguna } = useGetPenggunaByAkunId(1);
 
   const form = useForm({
     initialValues: {
       nama_barang: "",
       id_satuan: "",
-      id_pengguna: pengguna ? pengguna.id_pengguna : "",
       stok: "",
     },
     validate: {
-      nama_barang: (value) => value.length < 3 ? "Nama barang harus lebih dari 3 karakter" : null,
-      stok: (value) => value.length === 0 ? "Stok tidak boleh kosong" : null,
+      nama_barang: (value) =>
+        value.length < 3 ? "Nama barang harus lebih dari 3 karakter" : null,
+      stok: (value) => (value.length === 0 ? "Stok tidak boleh kosong" : null),
     },
   });
 
@@ -32,8 +30,9 @@ export const ProductAddPage = () => {
     const productData = {
       nama_barang: form.values.nama_barang,
       id_satuan: parseInt(form.values.id_satuan),
-      id_pengguna: form.values.id_pengguna,
+      id_pengguna: 1,
       stok: parseInt(form.values.stok),
+      kode_barang: "",
     };
 
     await mutationAddProduct.mutateAsync(productData, {
@@ -44,13 +43,21 @@ export const ProductAddPage = () => {
     });
   };
 
-  if (loadingUnits || loadingPengguna) {
+  if (loadingUnits) {
     return <Loader />;
   }
 
   return (
-    <Paper shadow="md" radius="md" p="lg" withBorder className="max-w-md mx-auto mt-10 bg-white">
-      <Text fw={700} size="xl" mb="md">Tambah Barang</Text>
+    <Paper
+      shadow="md"
+      radius="md"
+      p="lg"
+      withBorder
+      className="max-w-md mx-auto mt-10 bg-white"
+    >
+      <Text fw={700} size="xl" mb="md">
+        Tambah Barang
+      </Text>
       <form onSubmit={handleFormSubmit}>
         <TextInput
           label="Nama Barang"
@@ -66,11 +73,7 @@ export const ProductAddPage = () => {
           }))}
           required
         />
-        <TextInput
-          label="Stok"
-          {...form.getInputProps("stok")}
-          required
-        />
+        <TextInput label="Stok" {...form.getInputProps("stok")} required />
         <Button type="submit" color="green" mt="md">
           Simpan
         </Button>

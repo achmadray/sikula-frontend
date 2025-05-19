@@ -9,7 +9,7 @@ type UpdateProductRequest = {
   id_satuan?: number;
   id_pengguna?: number;
   kode_barang?: string;
-  stok?: number | undefined;
+  stok?: number | undefined ;
 };
 export async function updateProduct(data: UpdateProductRequest) {
   const res = await axios.put(`${BaseURL}/barang/${data.id_barang}`, data);
